@@ -1,19 +1,18 @@
-"""WCAG Review Demo - GitHub PR Diff Analyzer.
+"""WCAG Review Demo - Anthropic-powered code review."""
 
-A Python utility to fetch git diffs from GitHub PRs, filter them,
-and send them to the Anthropic Claude API for analysis.
-"""
+__version__ = "0.2.0"
 
-__version__ = "0.1.0"
-
-from src.claude_client import ClaudeClient
-from src.diff_filter import DiffFilter
+from src.anthropic_client_factory import AnthropicClientFactory
+from src.anthropic_code_review import AnthropicCodeReview
+from src.anthropic_prompt_service import AnthropicPromptService
+from src.anthropic_response_parser import AnthropicResponseParser, ReviewComment
 from src.github_diff_fetcher import GitHubDiffFetcher
-from src.main import PRDiffAnalyzer
 
 __all__ = [
-    "ClaudeClient",
-    "DiffFilter",
+    "AnthropicClientFactory",
+    "AnthropicCodeReview",
+    "AnthropicPromptService",
+    "AnthropicResponseParser",
     "GitHubDiffFetcher",
-    "PRDiffAnalyzer",
+    "ReviewComment",
 ]

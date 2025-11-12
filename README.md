@@ -1,226 +1,106 @@
 # WCAG Review Demo
 
-A clean, well-architected Python utility that fetches git diffs from GitHub Pull Requests, filters them based on configurable criteria, and sends them to the Anthropic Claude API for intelligent analysis. Built following DRY and SOLID principles for maintainability and extensibility.
+Streamlined Python utility for AI-powered accessibility and code quality reviews using Anthropic Claude API. Focuses on WCAG compliance checks and code review analysis.
 
-## 🌟 Features
+## Architecture
 
-- **GitHub Integration**: Seamlessly fetch PR diffs using the GitHub API
-- **Smart Filtering**: Filter diffs by file patterns, change size, and custom criteria
-- **AI-Powered Analysis**: Leverage Claude's advanced AI for multiple analysis types:
-  - Code reviews with quality feedback
-  - Concise change summaries
-  - Security vulnerability detection
-  - WCAG accessibility compliance checks
-- **Clean Architecture**: Built with SOLID principles for maintainability
-- **Well Tested**: Comprehensive unit test coverage
-- **Workflow Integration**: Manual GitHub Actions workflow for easy PR analysis
+Clean, modular design with four core components:
 
-## 📁 Project Structure
+- **`AnthropicClientFactory`** - Creates configured Claude API clients
+- **`AnthropicPromptService`** - Builds accessibility and code review prompts
+- **`AnthropicCodeReview`** - Main orchestrator for fetching diffs, filtering, and invoking Claude
+- **`AnthropicResponseParser`** - Parses JSON responses and generates HTML reports
 
-```
-wcag-review-demo/
-├── src/
-│   ├── __init__.py
-│   ├── main.py                 # Main orchestrator
-│   ├── github_diff_fetcher.py  # GitHub API integration
-│   ├── diff_filter.py          # Diff filtering logic
-│   └── claude_client.py        # Claude API client
-├── tests/
-│   ├── __init__.py
-│   ├── test_main.py
-│   ├── test_github_diff_fetcher.py
-│   ├── test_diff_filter.py
-│   └── test_claude_client.py
-├── site/
-│   └── index.html              # Demo documentation page
-├── .github/
-│   └── workflows/
-│       └── analyze-pr.yml      # GitHub Actions workflow
-├── pyproject.toml              # Project configuration
-├── requirements.txt            # Python dependencies
-├── .env.example                # Environment variables template
-└── README.md
-```
+Supporting modules:
+- **`GitHubDiffFetcher`** - Fetches PR diffs via GitHub API
 
-## 🚀 Quick Start
+## Features
 
-### Prerequisites
+- ✅ WCAG 2.1 AA accessibility compliance reviews
+- ✅ Code quality and best practices analysis
+- ✅ Automated diff filtering (excludes lock files, minified files)
+- ✅ HTML report generation as workflow artifacts
+- ✅ Python 3.11+ with full type hints
+- ✅ Clean, testable, SOLID-compliant code
 
-- Python 3.11 or higher
-- GitHub personal access token with repo read permissions
-- Anthropic API key for Claude access
+## Quick Start
 
 ### Installation
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/vonhoff/wcag-review-demo.git
-   cd wcag-review-demo
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure environment variables**:
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your credentials
-   ```
+```bash
+git clone https://github.com/vonhoff/wcag-review-demo.git
+cd wcag-review-demo
+pip install -r requirements.txt
+```
 
 ### Configuration
 
-Create a `.env` file with the following required variables:
+Copy `.env.example` to `.env` and configure:
 
 ```env
-# Required
-GITHUB_TOKEN=your_github_token_here
+GITHUB_TOKEN=your_github_token
 GITHUB_REPOSITORY=owner/repo
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
-
-# Optional
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
-MAX_TOKENS=4096
-ANALYSIS_TYPE=review
-GITHUB_PR_NUMBER=1
+ANTHROPIC_API_KEY=your_anthropic_key
+REVIEW_TYPE=accessibility  # or code_review
 ```
 
-## 💻 Usage
+### Usage
 
-### Command Line
-
-Analyze a specific PR:
-
+**CLI:**
 ```bash
-python -m src.main <pr_number>
+python -m src.main 123
 ```
 
-Or use environment variables:
-
-```bash
-export GITHUB_PR_NUMBER=123
-export ANALYSIS_TYPE=security
-python -m src.main
-```
-
-### GitHub Actions Workflow
-
-1. Go to your repository's "Actions" tab
-2. Select "Analyze PR with Claude" workflow
-3. Click "Run workflow"
-4. Enter the PR number and select analysis type
-5. View the results in the workflow logs
-
-### As a Python Module
-
+**Programmatic:**
 ```python
-from src.main import PRDiffAnalyzer
+from src.anthropic_code_review import AnthropicCodeReview
 
-# Create analyzer
-with PRDiffAnalyzer(
-    github_token="your_token",
+with AnthropicCodeReview(
+    github_token=token,
     repository_name="owner/repo",
-    anthropic_api_key="your_api_key",
-) as analyzer:
-    # Analyze a PR
-    result = analyzer.analyze_pr(
-        pr_number=123,
-        analysis_type="review"
-    )
-    
-    print(result["analysis"])
+    anthropic_api_key=api_key
+) as reviewer:
+    comments, html = reviewer.review_pr_accessibility(123)
+    reviewer.save_report(html, Path("report.html"))
 ```
 
-## 🎯 Analysis Types
+**GitHub Actions:**
+Trigger manually from Actions tab, select review type and PR number.
 
-The utility supports four types of analysis:
+## Review Types
 
-| Type | Description |
-|------|-------------|
-| `review` | Comprehensive code review focusing on quality, bugs, and best practices |
-| `summary` | Concise summary of changes and their significance |
-| `security` | Security vulnerability analysis with fix recommendations |
-| `accessibility` | WCAG compliance check with accessibility improvements |
+### Accessibility Review
+Checks for WCAG 2.1 AA compliance:
+- ARIA labels and roles
+- Keyboard navigation
+- Color contrast
+- Semantic HTML
+- Screen reader compatibility
 
-Set the analysis type via the `ANALYSIS_TYPE` environment variable or the `analysis_type` parameter.
+### Code Review
+Analyzes code quality:
+- Potential bugs and logic errors
+- Best practices violations
+- Maintainability issues
+- Error handling
 
-## 🧪 Testing
+## Output
 
-Run the test suite:
+Reviews generate:
+- JSON array of structured comments with file/line/issue/suggestion/severity
+- HTML report with categorized issues and severity counts
+- Saved as workflow artifacts in `reports/` directory
+
+## Testing
 
 ```bash
-# Run all tests
-pytest
-
-# Run with coverage report
-pytest --cov=src --cov-report=html
-
-# Run specific test file
-pytest tests/test_github_diff_fetcher.py
-
-# Run with verbose output
-pytest -v
+pytest                              # Run all tests
+pytest --cov=src --cov-report=html  # With coverage
+ruff check src/ tests/              # Lint code
 ```
 
-## 🏗️ Architecture
+39 tests, all passing.
 
-The project follows clean architecture principles with clear separation of concerns:
+## License
 
-### Components
-
-- **GitHubDiffFetcher**: Handles all GitHub API interactions using PyGithub
-- **DiffFilter**: Filters diffs based on file patterns, change size, and criteria
-- **ClaudeClient**: Manages communication with the Anthropic Claude API
-- **PRDiffAnalyzer**: Orchestrates the complete workflow
-
-### Design Principles
-
-- **Single Responsibility**: Each class has one clear purpose
-- **Open/Closed**: Classes are open for extension, closed for modification
-- **Dependency Inversion**: Depends on abstractions, not concrete implementations
-- **DRY**: No code duplication, reusable components
-- **Clean Code**: Well-documented, type-hinted, and tested
-
-## 📊 Filtering Options
-
-Configure diff filtering when creating the analyzer:
-
-```python
-analyzer = PRDiffAnalyzer(
-    github_token="...",
-    repository_name="...",
-    anthropic_api_key="...",
-    include_patterns=[r"\.py$", r"\.js$"],  # Only Python and JS files
-    exclude_patterns=[r"test_", r"__pycache__"],  # Exclude test files
-)
-```
-
-Available filter options:
-- `include_patterns`: List of regex patterns for files to include
-- `exclude_patterns`: List of regex patterns for files to exclude (takes precedence)
-- `min_line_changes`: Minimum number of line changes to include a file
-- `max_line_changes`: Maximum number of line changes to include a file
-
-## 🔒 Security
-
-- API keys are managed through environment variables
-- No secrets are committed to the repository
-- GitHub token requires only read permissions for public repos
-- All API communications use HTTPS
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📧 Support
-
-For issues or questions, please open an issue on GitHub.
-
----
-
-Built with ❤️ using Python, GitHub API, and Claude AI
+MIT License - see LICENSE file for details.
