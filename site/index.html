@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WCAG Review Demo - GitHub PR Diff Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: #2d3748;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        main {
+            padding: 3rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+        }
+
+        .code-block code {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .info-box {
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #5568d3;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        ul {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 WCAG Review Demo</h1>
+            <p>GitHub PR Diff Analyzer with AI-Powered Insights</p>
+        </header>
+
+        <main>
+            <section>
+                <h2>About This Project</h2>
+                <p>
+                    This Python utility fetches git diffs from GitHub Pull Requests, filters them based on configurable
+                    criteria, and sends them to the Anthropic Claude API for intelligent analysis. Built with clean
+                    architecture principles (DRY, SOLID) for maintainability and extensibility.
+                </p>
+            </section>
+
+            <section>
+                <h2>Key Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>🔗 GitHub Integration</h3>
+                        <p>Seamlessly fetch PR diffs using the GitHub API with full authentication support.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🎯 Smart Filtering</h3>
+                        <p>Filter diffs by file patterns, change size, and custom criteria to focus on what matters.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🤖 AI Analysis</h3>
+                        <p>Leverage Claude's advanced AI for code reviews, security checks, and accessibility audits.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>⚙️ Configurable</h3>
+                        <p>Extensive configuration via environment variables for flexibility across environments.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🧪 Well Tested</h3>
+                        <p>Comprehensive unit tests ensuring reliability and facilitating future enhancements.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📚 Clean Code</h3>
+                        <p>Follows SOLID principles and clean architecture for maintainability and scalability.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Quick Start</h2>
+                
+                <h3>1. Installation</h3>
+                <div class="code-block">
+                    <code>
+# Clone the repository<br>
+git clone https://github.com/vonhoff/wcag-review-demo.git<br>
+cd wcag-review-demo<br>
+<br>
+# Install dependencies<br>
+pip install -r requirements.txt
+                    </code>
+                </div>
+
+                <h3>2. Configuration</h3>
+                <p>Copy the example environment file and add your credentials:</p>
+                <div class="code-block">
+                    <code>
+cp .env.example .env<br>
+# Edit .env with your GitHub token and Anthropic API key
+                    </code>
+                </div>
+
+                <h3>3. Usage</h3>
+                <div class="code-block">
+                    <code>
+# Analyze a PR<br>
+python -m src.main &lt;pr_number&gt;<br>
+<br>
+# Or set PR number in environment<br>
+export GITHUB_PR_NUMBER=123<br>
+python -m src.main
+                    </code>
+                </div>
+            </section>
+
+            <section>
+                <h2>Analysis Types</h2>
+                <div class="info-box">
+                    The tool supports multiple analysis types that can be configured via the <code>ANALYSIS_TYPE</code> environment variable:
+                </div>
+                <ul>
+                    <li><strong>review</strong> - Comprehensive code review with feedback on quality and best practices</li>
+                    <li><strong>summary</strong> - Concise summary of changes and their significance</li>
+                    <li><strong>security</strong> - Security vulnerability analysis and recommendations</li>
+                    <li><strong>accessibility</strong> - WCAG compliance check and accessibility improvements</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Architecture</h2>
+                <p>The project follows clean architecture principles with clear separation of concerns:</p>
+                <ul>
+                    <li><strong>GitHubDiffFetcher</strong> - Handles all GitHub API interactions</li>
+                    <li><strong>DiffFilter</strong> - Filters diffs based on configurable criteria</li>
+                    <li><strong>ClaudeClient</strong> - Manages communication with Anthropic Claude API</li>
+                    <li><strong>PRDiffAnalyzer</strong> - Orchestrates the complete workflow</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Testing</h2>
+                <div class="code-block">
+                    <code>
+# Run all tests<br>
+pytest<br>
+<br>
+# Run with coverage<br>
+pytest --cov=src --cov-report=html<br>
+<br>
+# Run specific test file<br>
+pytest tests/test_github_diff_fetcher.py
+                    </code>
+                </div>
+            </section>
+
+            <section>
+                <h2>GitHub Actions Workflow</h2>
+                <p>
+                    The utility can be triggered via a manual GitHub Actions workflow, allowing you to analyze PRs
+                    directly from the GitHub UI. The workflow is configured to accept the PR number as input.
+                </p>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 WCAG Review Demo | Built with ❤️ using Python, GitHub API, and Claude AI</p>
+        </footer>
+    </div>
+</body>
+</html>
