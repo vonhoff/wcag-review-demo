@@ -16,13 +16,8 @@ class AnthropicPromptService:
             return f.read()
 
     @staticmethod
-    def build_prompt(diff: str, pr_context: str | None = None) -> str:
+    def build_prompt(diff: str) -> str:
         """Build unified prompt for accessibility-focused code review."""
         template = AnthropicPromptService._load_template("review_prompt")
 
-        pr_context_section = f"PR Context: {pr_context}\n\n" if pr_context else ""
-
-        return template.format(
-            pr_context_section=pr_context_section,
-            diff=diff
-        )
+        return template.format(diff=diff)

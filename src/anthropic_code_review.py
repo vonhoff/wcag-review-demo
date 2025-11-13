@@ -72,10 +72,8 @@ class AnthropicCodeReview:
         """
         logger.info("Starting accessibility-focused code review for PR #%d", pr_number)
 
-        pr_info = self.github_fetcher.get_pr_info(pr_number)
-        pr_context = f"{pr_info['title']}\n{pr_info.get('description', '')}"
-
         raw_diff = self.github_fetcher.fetch_pr_diff(pr_number)
+        logger.info("Raw diff size: %d characters", len(raw_diff))
         filtered_diff = self._filter_diff(raw_diff)
 
         if not filtered_diff.strip():
@@ -84,7 +82,10 @@ class AnthropicCodeReview:
 
         logger.info("Filtered diff size: %d characters", len(filtered_diff))
 
-        prompt = self.prompt_service.build_prompt(filtered_diff, pr_context)
+        prompt = self.prompt_service.build_prompt(filtered_diff)
+
+        # Save debug files
+        self._save_debug_files(pr_number, raw_diff, filtered_diff, prompt)
 
         response_text = self._call_claude(prompt)
         comments = self.parser.parse_response(response_text)
@@ -104,27 +105,57 @@ class AnthropicCodeReview:
         Returns:
             Filtered diff content
         """
-        if len(diff) > self.MAX_DIFF_SIZE:
-            logger.warning(
-                "Diff size (%d) exceeds limit (%d), truncating",
-                len(diff),
-                self.MAX_DIFF_SIZE,
-            )
-            diff = diff[: self.MAX_DIFF_SIZE]
-
         lines = diff.split("\n")
         filtered_lines = []
+        current_file_lines: list[str] = []
+        current_filename: str | None = None
         skip_file = False
+        included_files: list[str] = []
+        excluded_files: list[str] = []
 
         for line in lines:
             if line.startswith(("--- a/", "+++ b/")):
-                filename = line[6:]
-                skip_file = any(re.search(pattern, filename) for pattern in self.EXCLUDE_PATTERNS)
+                # Process previous file if any
+                if current_filename is not None and not skip_file:
+                    filtered_lines.extend(current_file_lines)
+                    included_files.append(current_filename)
+                elif current_filename is not None:
+                    excluded_files.append(current_filename)
 
-            if not skip_file:
-                filtered_lines.append(line)
+                # Start new file
+                current_filename = line[6:]
+                current_file_lines = [line]
+                skip_file = any(re.search(pattern, current_filename) for pattern in self.EXCLUDE_PATTERNS)
+            else:
+                if current_file_lines:
+                    current_file_lines.append(line)
 
-        return "\n".join(filtered_lines)
+        # Process last file
+        if current_filename is not None and not skip_file:
+            filtered_lines.extend(current_file_lines)
+            included_files.append(current_filename)
+        elif current_filename is not None:
+            excluded_files.append(current_filename)
+
+        filtered_diff = "\n".join(filtered_lines)
+
+        # Log file information
+        if included_files:
+            logger.info("Included files: %s", ", ".join(included_files))
+        if excluded_files:
+            logger.info("Excluded files: %s", ", ".join(excluded_files))
+
+        # Check size after filtering
+        original_size = len(filtered_diff)
+        if original_size > self.MAX_DIFF_SIZE:
+            logger.warning(
+                "Filtered diff size (%d) exceeds limit (%d), truncating",
+                original_size,
+                self.MAX_DIFF_SIZE,
+            )
+            filtered_diff = filtered_diff[: self.MAX_DIFF_SIZE]
+
+        return filtered_diff
 
     def _call_claude(self, prompt: str) -> str:
         """Call Claude API with the given prompt.
@@ -165,6 +196,32 @@ class AnthropicCodeReview:
         except Exception:
             logger.exception("Claude API call failed")
             raise
+
+    def _save_debug_files(
+        self, pr_number: int, raw_diff: str, filtered_diff: str, prompt: str
+    ) -> None:
+        """Save debug files for troubleshooting.
+
+        Args:
+            pr_number: Pull request number
+            raw_diff: Raw diff from GitHub
+            filtered_diff: Filtered diff after processing
+            prompt: Full prompt sent to Claude
+        """
+        debug_dir = Path("reports") / "debug" / f"pr_{pr_number}"
+        debug_dir.mkdir(parents=True, exist_ok=True)
+
+        # Save raw diff
+        (debug_dir / "01_raw_diff.diff").write_text(raw_diff, encoding="utf-8")
+        logger.info("Saved raw diff to %s", debug_dir / "01_raw_diff.diff")
+
+        # Save filtered diff
+        (debug_dir / "02_filtered_diff.diff").write_text(filtered_diff, encoding="utf-8")
+        logger.info("Saved filtered diff to %s", debug_dir / "02_filtered_diff.diff")
+
+        # Save full prompt
+        (debug_dir / "03_prompt.txt").write_text(prompt, encoding="utf-8")
+        logger.info("Saved prompt to %s", debug_dir / "03_prompt.txt")
 
     def save_report(self, html_report: str, output_path: Path) -> None:
         """Save HTML report to file.

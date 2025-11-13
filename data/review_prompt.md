@@ -17,8 +17,6 @@ Review the following code changes with a primary focus on accessibility:
 - Note any anti-patterns or code smells that could impact accessibility
 - Check for proper error handling in accessibility-related code
 
-{pr_context_section}
-
 Provide your review as a JSON array of comment objects. Each comment should have:
 - "file": filename where the issue was found
 - "line": line number (or null if file-level)
