@@ -1,11 +1,17 @@
 """Main orchestrator for Anthropic-powered code review."""
 
+from __future__ import annotations
+
 import logging
 import re
-from pathlib import Path
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
-from src.anthropic_client_factory import AnthropicClientFactory
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import anthropic
+
+from src.anthropic_client_factory import AnthropicClientFactory, MockAnthropicClient
 from src.anthropic_prompt_service import AnthropicPromptService
 from src.anthropic_response_parser import AnthropicResponseParser, ReviewComment
 from src.github_diff_fetcher import GitHubDiffFetcher
@@ -16,6 +22,8 @@ logger = logging.getLogger(__name__)
 
 class AnthropicCodeReview:
     """Orchestrates accessibility and code review analysis using Claude API."""
+
+    client: anthropic.Anthropic | MockAnthropicClient
 
     EXCLUDE_PATTERNS: ClassVar[list[str]] = [
         r"package-lock\.json$",
@@ -53,8 +61,8 @@ class AnthropicCodeReview:
         self.prompt_service = AnthropicPromptService()
         self.parser = AnthropicResponseParser()
 
-    def review_pr_accessibility(self, pr_number: int) -> tuple[list[ReviewComment], str]:
-        """Conduct accessibility review of a PR.
+    def review_pr(self, pr_number: int) -> tuple[list[ReviewComment], str]:
+        """Conduct unified accessibility-focused code review of a PR.
 
         Args:
             pr_number: Pull request number
@@ -62,7 +70,7 @@ class AnthropicCodeReview:
         Returns:
             Tuple of (comments list, HTML report)
         """
-        logger.info("Starting accessibility review for PR #%d", pr_number)
+        logger.info("Starting accessibility-focused code review for PR #%d", pr_number)
 
         pr_info = self.github_fetcher.get_pr_info(pr_number)
         pr_context = f"{pr_info['title']}\n{pr_info.get('description', '')}"
@@ -72,52 +80,18 @@ class AnthropicCodeReview:
 
         if not filtered_diff.strip():
             logger.warning("No relevant changes found after filtering")
-            return [], self.parser.generate_html_report([], pr_number, "accessibility")
+            return [], self.parser.generate_html_report([], pr_number, "unified")
 
         logger.info("Filtered diff size: %d characters", len(filtered_diff))
 
-        prompt = self.prompt_service.build_accessibility_prompt(filtered_diff, pr_context)
+        prompt = self.prompt_service.build_prompt(filtered_diff, pr_context)
 
         response_text = self._call_claude(prompt)
         comments = self.parser.parse_response(response_text)
 
-        logger.info("Found %d accessibility issues", len(comments))
+        logger.info("Found %d issues", len(comments))
 
-        html_report = self.parser.generate_html_report(comments, pr_number, "accessibility")
-
-        return comments, html_report
-
-    def review_pr_code_quality(self, pr_number: int) -> tuple[list[ReviewComment], str]:
-        """Conduct code quality review of a PR.
-
-        Args:
-            pr_number: Pull request number
-
-        Returns:
-            Tuple of (comments list, HTML report)
-        """
-        logger.info("Starting code quality review for PR #%d", pr_number)
-
-        pr_info = self.github_fetcher.get_pr_info(pr_number)
-        pr_context = f"{pr_info['title']}\n{pr_info.get('description', '')}"
-
-        raw_diff = self.github_fetcher.fetch_pr_diff(pr_number)
-        filtered_diff = self._filter_diff(raw_diff)
-
-        if not filtered_diff.strip():
-            logger.warning("No relevant changes found after filtering")
-            return [], self.parser.generate_html_report([], pr_number, "code_review")
-
-        logger.info("Filtered diff size: %d characters", len(filtered_diff))
-
-        prompt = self.prompt_service.build_code_review_prompt(filtered_diff, pr_context)
-
-        response_text = self._call_claude(prompt)
-        comments = self.parser.parse_response(response_text)
-
-        logger.info("Found %d code quality issues", len(comments))
-
-        html_report = self.parser.generate_html_report(comments, pr_number, "code_review")
+        html_report = self.parser.generate_html_report(comments, pr_number, "unified")
 
         return comments, html_report
 
@@ -171,9 +145,19 @@ class AnthropicCodeReview:
                 messages=[{"role": "user", "content": prompt}],
             )
 
+            # Handle both real API response (object with .content) and mock response (dict)
+            if hasattr(response, "content"):
+                # Real API response
+                content_blocks = response.content
+            else:
+                # Mock response (dict)
+                content_blocks = response.get("content", [])
+
             text_parts = []
-            for block in response.content:
-                if block.type == "text":
+            for block in content_blocks:
+                if isinstance(block, dict) and block.get("type") == "text":
+                    text_parts.append(block["text"])
+                elif hasattr(block, "type") and block.type == "text":
                     text_parts.append(block.text)
 
             return "".join(text_parts)
@@ -197,7 +181,7 @@ class AnthropicCodeReview:
         """Clean up resources."""
         self.github_fetcher.close()
 
-    def __enter__(self) -> "AnthropicCodeReview":
+    def __enter__(self) -> AnthropicCodeReview:  # noqa: PYI034
         """Context manager entry."""
         return self
 

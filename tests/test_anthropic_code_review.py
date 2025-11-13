@@ -28,11 +28,11 @@ class TestAnthropicCodeReview:
 
     @patch("src.anthropic_code_review.AnthropicClientFactory")
     @patch("src.anthropic_code_review.GitHubDiffFetcher")
-    def test_review_pr_accessibility(self, mock_fetcher_class: Mock, mock_factory: Mock) -> None:
-        """Test accessibility review."""
+    def test_review_pr_unified(self, mock_fetcher_class: Mock, mock_factory: Mock) -> None:
+        """Test unified accessibility-focused code review."""
         mock_client = Mock()
         mock_client.messages.create.return_value = Mock(
-            content=[Mock(type="text", text='[{"file":"test.html","line":1,"issue":"Test","suggestion":"Fix","severity":"high","wcag_criteria":"1.1.1"}]')]
+            content=[Mock(type="text", text='[{"file":"test.html","line":1,"issue":"Missing alt text","suggestion":"Add alt attribute","severity":"high","category":"accessibility","wcag_criteria":"1.1.1"},{"file":"app.js","line":10,"issue":"Bug","suggestion":"Fix it","severity":"critical","category":"bug","wcag_criteria":null}]')]
         )
         mock_factory.create_client.return_value = mock_client
         mock_factory.get_default_model.return_value = "test-model"
@@ -49,39 +49,15 @@ class TestAnthropicCodeReview:
             anthropic_api_key="api_key",
         )
 
-        comments, html = reviewer.review_pr_accessibility(123)
+        comments, html = reviewer.review_pr(123)
 
-        assert len(comments) == 1
+        assert len(comments) == 2
         assert comments[0].file == "test.html"
+        assert comments[0].category == "accessibility"
+        assert comments[0].wcag_criteria == "1.1.1"
+        assert comments[1].category == "bug"
+        assert comments[1].wcag_criteria is None
         assert "test.html" in html
-
-    @patch("src.anthropic_code_review.AnthropicClientFactory")
-    @patch("src.anthropic_code_review.GitHubDiffFetcher")
-    def test_review_pr_code_quality(self, mock_fetcher_class: Mock, mock_factory: Mock) -> None:
-        """Test code quality review."""
-        mock_client = Mock()
-        mock_client.messages.create.return_value = Mock(
-            content=[Mock(type="text", text='[{"file":"app.py","line":10,"issue":"Bug","suggestion":"Fix it","severity":"critical","category":"bug"}]')]
-        )
-        mock_factory.create_client.return_value = mock_client
-        mock_factory.get_default_model.return_value = "test-model"
-        mock_factory.get_default_max_tokens.return_value = 8192
-
-        mock_fetcher = Mock()
-        mock_fetcher.get_pr_info.return_value = {"title": "Fix bug", "description": ""}
-        mock_fetcher.fetch_pr_diff.return_value = "--- a/app.py\n+++ b/app.py\n@@ -1 +1 @@\n-x=1\n+x=2"
-        mock_fetcher_class.return_value = mock_fetcher
-
-        reviewer = AnthropicCodeReview(
-            github_token="token",
-            repository_name="owner/repo",
-            anthropic_api_key="api_key",
-        )
-
-        comments, _html = reviewer.review_pr_code_quality(123)
-
-        assert len(comments) == 1
-        assert comments[0].category == "bug"
 
     @patch("src.anthropic_code_review.AnthropicClientFactory")
     @patch("src.anthropic_code_review.GitHubDiffFetcher")

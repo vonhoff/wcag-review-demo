@@ -1,7 +1,13 @@
 """Fetches git diffs from GitHub Pull Requests."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from github import Auth, Github
-from github.PullRequest import PullRequest
+
+if TYPE_CHECKING:
+    from github.PullRequest import PullRequest
 
 
 class GitHubDiffFetcher:
@@ -67,7 +73,7 @@ class GitHubDiffFetcher:
         """Close GitHub client."""
         self.github_client.close()
 
-    def __enter__(self) -> "GitHubDiffFetcher":
+    def __enter__(self) -> GitHubDiffFetcher:  # noqa: PYI034
         return self
 
     def __exit__(self, exc_type: object, exc_val: object, exc_tb: object) -> None:

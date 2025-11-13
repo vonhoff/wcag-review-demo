@@ -1,0 +1,56 @@
+[
+  {
+    "file": "src/components/Button.tsx",
+    "line": 15,
+    "issue": "Missing alt text for decorative image",
+    "suggestion": "Add alt='' for decorative images or provide meaningful alternative text",
+    "severity": "high",
+    "category": "accessibility",
+    "wcag_criteria": "1.1.1"
+  },
+  {
+    "file": "src/pages/HomePage.tsx",
+    "line": 42,
+    "issue": "Form input missing associated label",
+    "suggestion": "Use proper label association with htmlFor/id attributes or wrap input in label",
+    "severity": "critical",
+    "category": "accessibility",
+    "wcag_criteria": "1.3.1"
+  },
+  {
+    "file": "src/components/Navigation.tsx",
+    "line": 28,
+    "issue": "Link text 'click here' is not descriptive",
+    "suggestion": "Use descriptive link text that indicates the destination or purpose",
+    "severity": "medium",
+    "category": "accessibility",
+    "wcag_criteria": "2.4.4"
+  },
+  {
+    "file": "src/components/Modal.tsx",
+    "line": 67,
+    "issue": "Modal dialog missing proper heading structure",
+    "suggestion": "Add an h1-h6 element as the first element in the modal for screen reader navigation",
+    "severity": "high",
+    "category": "accessibility",
+    "wcag_criteria": "2.4.6"
+  },
+  {
+    "file": "src/utils/helpers.ts",
+    "line": 89,
+    "issue": "Potential null pointer dereference",
+    "suggestion": "Add null check before accessing object properties",
+    "severity": "medium",
+    "category": "bug",
+    "wcag_criteria": null
+  },
+  {
+    "file": "src/components/Form.tsx",
+    "line": 123,
+    "issue": "Input field missing autocomplete attribute",
+    "suggestion": "Add appropriate autocomplete attribute to help users fill forms more quickly",
+    "severity": "low",
+    "category": "accessibility",
+    "wcag_criteria": "1.3.5"
+  }
+]

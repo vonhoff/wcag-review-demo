@@ -1,5 +1,7 @@
 """Main entry point for Anthropic-powered code review."""
 
+from __future__ import annotations
+
 import os
 import sys
 from pathlib import Path
@@ -33,7 +35,7 @@ def load_config() -> dict[str, str]:
 
 
 def main() -> None:
-    """Run accessibility and code review analysis."""
+    """Run unified accessibility-focused code review analysis."""
     try:
         config = load_config()
 
@@ -53,8 +55,6 @@ def main() -> None:
             print(f"Error: Invalid PR number '{pr_number_str}'")
             sys.exit(1)
 
-        review_type = os.getenv("REVIEW_TYPE", "accessibility")
-
         with AnthropicCodeReview(
             github_token=config["github_token"],
             repository_name=config["repository_name"],
@@ -62,17 +62,14 @@ def main() -> None:
             model=config["model"],
             max_tokens=config["max_tokens"],
         ) as reviewer:
-            if review_type == "accessibility":
-                comments, html_report = reviewer.review_pr_accessibility(pr_number)
-            else:
-                comments, html_report = reviewer.review_pr_code_quality(pr_number)
+            comments, html_report = reviewer.review_pr(pr_number)
 
             output_dir = Path("reports")
-            output_file = output_dir / f"pr_{pr_number}_{review_type}_report.html"
+            output_file = output_dir / f"pr_{pr_number}_review_report.html"
             reviewer.save_report(html_report, output_file)
 
             print(f"\n{'=' * 80}")
-            print(f"PR #{pr_number} - {review_type.title()} Review")
+            print(f"PR #{pr_number} - Accessibility-Focused Code Review")
             print(f"{'=' * 80}")
             print(f"\nFound {len(comments)} issues")
             print(f"Report saved: {output_file}")

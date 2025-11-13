@@ -1,8 +1,10 @@
 """Tests for AnthropicClientFactory."""
 
+import json
+
 import pytest
 
-from src.anthropic_client_factory import AnthropicClientFactory
+from src.anthropic_client_factory import AnthropicClientFactory, MockAnthropicClient
 
 
 class TestAnthropicClientFactory:
@@ -27,3 +29,24 @@ class TestAnthropicClientFactory:
         """Test default max tokens retrieval."""
         tokens = AnthropicClientFactory.get_default_max_tokens()
         assert tokens == 8192
+
+    def test_create_mock_client_with_test_key(self) -> None:
+        """Test mock client creation with TEST API key."""
+        client = AnthropicClientFactory.create_client("TEST")
+        assert client is not None
+        # Should be a MockAnthropicClient instance
+        assert isinstance(client, MockAnthropicClient)
+
+        # Test that the mock client returns expected response
+        response = client.messages.create(
+            model="test-model",
+            max_tokens=1000,
+            messages=[{"role": "user", "content": "test"}]
+        )
+        assert "content" in response
+        assert len(response["content"]) == 1
+        assert response["content"][0]["type"] == "text"
+        # Should contain the mock JSON data
+        mock_data = json.loads(response["content"][0]["text"])
+        assert isinstance(mock_data, list)
+        assert len(mock_data) > 0

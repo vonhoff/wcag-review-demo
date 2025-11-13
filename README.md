@@ -60,29 +60,31 @@ with AnthropicCodeReview(
     repository_name="owner/repo",
     anthropic_api_key=api_key
 ) as reviewer:
-    comments, html = reviewer.review_pr_accessibility(123)
+    comments, html = reviewer.review_pr(123)
     reviewer.save_report(html, Path("report.html"))
 ```
 
 **GitHub Actions:**
 Trigger manually from Actions tab, select review type and PR number.
 
-## Review Types
+## Review Approach
 
-### Accessibility Review
-Checks for WCAG 2.1 AA compliance:
-- ARIA labels and roles
-- Keyboard navigation
-- Color contrast
-- Semantic HTML
+### Unified Accessibility-Focused Code Review
+Combines accessibility compliance and code quality analysis with primary focus on accessibility:
+
+**Accessibility Checks:**
+- WCAG 2.1 AA compliance violations
+- ARIA labels, roles, and properties
+- Keyboard navigation support
+- Color contrast and text alternatives
+- Semantic HTML usage
 - Screen reader compatibility
 
-### Code Review
-Analyzes code quality:
-- Potential bugs and logic errors
-- Best practices violations
-- Maintainability issues
-- Error handling
+**Code Quality Checks:**
+- Potential bugs and logic errors affecting accessibility
+- Code quality and best practices for accessibility implementations
+- Maintainability of accessibility features
+- Proper error handling in accessibility-related code
 
 ## Output
 
