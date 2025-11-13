@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
 import anthropic
+
+logger = logging.getLogger(__name__)
 
 
 class MockAnthropicClient:
@@ -65,10 +68,14 @@ class AnthropicClientFactory:
         if not api_key:
             raise ValueError("Anthropic API key cannot be empty")
 
-        if api_key == "TEST":
-            return MockAnthropicClient(api_key)  # type: ignore[return-value]
+        # Strip whitespace and check for test mode (case-insensitive)
+        api_key_trimmed = api_key.strip()
+        if api_key_trimmed.upper() == "TEST":
+            logger.info("Using mock Anthropic client (TEST mode)")
+            return MockAnthropicClient(api_key_trimmed)  # type: ignore[return-value]
 
-        return anthropic.Anthropic(api_key=api_key)
+        logger.info("Using real Anthropic API client")
+        return anthropic.Anthropic(api_key=api_key_trimmed)
 
     @staticmethod
     def get_default_model() -> str:
