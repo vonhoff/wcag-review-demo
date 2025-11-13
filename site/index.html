@@ -1,284 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WCAG Review Demo - GitHub PR Diff Analyzer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 2rem;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        header {
-            background: #2d3748;
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        main {
-            padding: 3rem;
-        }
-
-        section {
-            margin-bottom: 3rem;
-        }
-
-        h2 {
-            color: #2d3748;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 0.5rem;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .feature-card {
-            padding: 1.5rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            border-color: #667eea;
-        }
-
-        .feature-card h3 {
-            color: #667eea;
-            margin-bottom: 0.5rem;
-        }
-
-        .code-block {
-            background: #2d3748;
-            color: #f7fafc;
-            padding: 1.5rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-family: 'Courier New', monospace;
-            margin: 1rem 0;
-        }
-
-        .code-block code {
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .info-box {
-            background: #ebf8ff;
-            border-left: 4px solid #4299e1;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 4px;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        .button:hover {
-            background: #5568d3;
-        }
-
-        footer {
-            background: #2d3748;
-            color: white;
-            text-align: center;
-            padding: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        ul {
-            margin-left: 2rem;
-            margin-top: 0.5rem;
-        }
-
-        li {
-            margin-bottom: 0.5rem;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>A Basic Shirt Wardrobe, Part One</title>
+    <meta name="description"
+        content="A comprehensive guide to building a basic shirt wardrobe, covering oxford cloth button-downs, ecru shirts, and essential wardrobe staples.">
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>🔍 WCAG Review Demo</h1>
-            <p>GitHub PR Diff Analyzer with AI-Powered Insights</p>
-        </header>
-
-        <main>
+    <main>
+        <article>
+            <header>
+                <h1>A Basic Shirt Wardrobe</h1>
+            </header>
             <section>
-                <h2>About This Project</h2>
+                <h2>Introduction</h2>
                 <p>
-                    This Python utility fetches git diffs from GitHub Pull Requests, filters them based on configurable
-                    criteria, and sends them to the Anthropic Claude API for intelligent analysis. Built with clean
-                    architecture principles (DRY, SOLID) for maintainability and extensibility.
+                    I believe it was in an old blog post on A Suitable Wardrobe where I came across a Bruce Boyer
+                    quote, and I paraphrase, that a well-curated wardrobe is the best incentive to stay in shape. By
+                    "stay in shape," he meant staying the same size, of course. If you've invested a considerable amount
+                    into clothes that hang without a pull or a ripple, you probably don't want to gain or lose too much
+                    weight, either way.
+                </p>
+                <blockquote>
+                    "A well-curated wardrobe is the best incentive to stay in shape."
+                    <footer>
+                        <cite>- Bruce Boyer</cite>
+                    </footer>
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>Personal Reflections</h2>
+                <p>
+                    That quote in the introduction recently came to mind as I started rebuilding my shirt wardrobe. I
+                    had a moment of realization last year, much like when Daisy buried her face into Gatsby's collection
+                    of sheer linen and fine flannel shirts, sobbing, "They're such beautiful
+                    shirts." Except, mine weren't so beautiful. They were so slim. Things I bought fifteen years ago
+                    no longer fit, as I've gone up a size. Unlike tailored jackets, button-ups don't come with inlays,
+                    so I've been slowly rebuilding my shirt collection, piece by piece.
+                </p>
+                <ul>
+                    <li>
+                        The tattersalls I thought would go nicely under rustic tweed jackets barely saw any use over
+                        the past fifteen years.
+                    </li>
+                    <li>
+                        The discounted Margiela shirt I bought as an experiment looked more like a bad Kickstarter
+                        project than thoughtful avant-garde.
+                    </li>
+                    <li>
+                        This guide will be broken into two parts: shirts for tailoring and shirts for casualwear.
+                    </li>
+                    <li>Like my "Excited to Wear" posts, this is filled with personal prejudice and bias.</li>
+                </ul>
+
+                <h2>The Oxford Cloth Button-Down</h2>
+                <p>
+                    Nearly 20 years after buying my first one, the oxford cloth button-down remains the backbone of
+                    my tailored wardrobe. I love it for all the reasons why I love the other hallmarks of classic
+                    American style: three-roll-two jackets, polo coats, duffle coats,
+                    round-toe Aldens, prickly Shetlands, and turned-up cuffs sitting on top of penny loafers. This
+                    casual variant of classic British clothing is more democratic, a reflection of American values, and
+                    feels at home in today's dressed-down world.
+                </p>
+                <h3>The History</h3>
+                <p>
+                    As the story goes, the button-down collar came about in 1896 when John E. Brooks, grandson of
+                    Brooks Brothers founder Henry Sands Brooks, noticed English polo players wearing little buttons on
+                    their
+                    collars to prevent the points from flapping in their faces
+                    during play. He thought this invention was charming, so he sent a sample to his tailors with
+                    instructions to copy it. In 1900, Brooks Brothers put the new design on their ready-made sport
+                    shirts, first marketed as "polo shirts" for their polo-inspired collars.
+                </p>
+                <h3>Origins and Style</h3>
+                <p>
+                    Originally debuted in white cotton cheviots (a stout twill), these shirts were later made in a
+                    nubby basketweave known as oxford. Hence the name: oxford cloth button-downs. Since Brooks Brothers
+                    dressed that upwardly mobile class of Americans who saw
+                    their fortunes rise with industrial capitalism, their shirts were worn by the kind of people who
+                    sent their children to elite preparatory schools that fed into the Ivy League system.
+                </p>
+                <h3>Essential Qualities</h3>
+                <p>
+                    That's how these shirts became part of the language of Ivy Style, worn with soft-shouldered
+                    tweeds, rep striped ties, flat-front trousers, and tassel loafers. For men who measure the distance
+                    between the buttons on their two-button Ivy Style jacket cuffs,
+                    there are two crucial qualities when shopping for a button-down. First, the collar should be
+                    free of the fused interlining typically used to make the collar behave but robs it of the individual
+                    expression, casual ease, and lived-in look that made the mid-century Brooks Brothers shirts
+                    charming.
                 </p>
             </section>
 
             <section>
-                <h2>Key Features</h2>
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <h3>🔗 GitHub Integration</h3>
-                        <p>Seamlessly fetch PR diffs using the GitHub API with full authentication support.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>🎯 Smart Filtering</h3>
-                        <p>Filter diffs by file patterns, change size, and custom criteria to focus on what matters.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>🤖 AI Analysis</h3>
-                        <p>Leverage Claude's advanced AI for code reviews, security checks, and accessibility audits.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>⚙️ Configurable</h3>
-                        <p>Extensive configuration via environment variables for flexibility across environments.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>🧪 Well Tested</h3>
-                        <p>Comprehensive unit tests ensuring reliability and facilitating future enhancements.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>📚 Clean Code</h3>
-                        <p>Follows SOLID principles and clean architecture for maintainability and scalability.</p>
-                    </div>
+                <h2>Recommended Shirt Brands</h2>
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Brand</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Price Range</th>
+                                <th scope="col">Best For</th>
+                                <th scope="col">Notable Feature</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Ascot Chang</th>
+                                <td>Bespoke</td>
+                                <td>$$$</td>
+                                <td>Custom fit</td>
+                                <td>Consistent quality, multiple locations</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Brooks Brothers</th>
+                                <td>Ready-to-wear</td>
+                                <td>$$</td>
+                                <td>Classic button-downs</td>
+                                <td>Iconic oxford cloth heritage</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">G. Inglese</th>
+                                <td>Ready-to-wear</td>
+                                <td>$$$</td>
+                                <td>Fine workmanship</td>
+                                <td>Exceptional hand-finishing</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
             <section>
-                <h2>Quick Start</h2>
-                
-                <h3>1. Installation</h3>
-                <div class="code-block">
-                    <code>
-# Clone the repository<br>
-git clone https://github.com/vonhoff/wcag-review-demo.git<br>
-cd wcag-review-demo<br>
-<br>
-# Install dependencies<br>
-pip install -r requirements.txt
-                    </code>
-                </div>
-
-                <h3>2. Configuration</h3>
-                <p>Copy the example environment file and add your credentials:</p>
-                <div class="code-block">
-                    <code>
-cp .env.example .env<br>
-# Edit .env with your GitHub token and Anthropic API key
-                    </code>
-                </div>
-
-                <h3>3. Usage</h3>
-                <div class="code-block">
-                    <code>
-# Analyze a PR<br>
-python -m src.main &lt;pr_number&gt;<br>
-<br>
-# Or set PR number in environment<br>
-export GITHUB_PR_NUMBER=123<br>
-python -m src.main
-                    </code>
-                </div>
+                <h2>Shirt Care & Maintenance</h2>
+                <details>
+                    <summary>How often should I replace button-down shirts?</summary>
+                    <p>
+                        A well-made button-down can last 5-10 years with proper care. The collar and cuffs wear
+                        first, so inspect them regularly. If they show excessive fraying or the collar points no longer
+                        maintain their shape, it's time for replacement.
+                    </p>
+                </details>
+                <details open>
+                    <summary>Care instructions for oxford cloth</summary>
+                    <ul>
+                        <li>Wash in cold water on gentle cycle to preserve the fabric's texture</li>
+                        <li>Hang dry or tumble dry on low heat - the nubby weave holds up well</li>
+                        <li>Iron while slightly damp using medium heat</li>
+                        <li>Store folded rather than on hangers to prevent shoulder bumps</li>
+                    </ul>
+                </details>
             </section>
 
             <section>
-                <h2>Analysis Types</h2>
-                <div class="info-box">
-                    The tool supports multiple analysis types that can be configured via the <code>ANALYSIS_TYPE</code> environment variable:
-                </div>
-                <ul>
-                    <li><strong>review</strong> - Comprehensive code review with feedback on quality and best practices</li>
-                    <li><strong>summary</strong> - Concise summary of changes and their significance</li>
-                    <li><strong>security</strong> - Security vulnerability analysis and recommendations</li>
-                    <li><strong>accessibility</strong> - WCAG compliance check and accessibility improvements</li>
-                </ul>
-            </section>
-
-            <section>
-                <h2>Architecture</h2>
-                <p>The project follows clean architecture principles with clear separation of concerns:</p>
-                <ul>
-                    <li><strong>GitHubDiffFetcher</strong> - Handles all GitHub API interactions</li>
-                    <li><strong>DiffFilter</strong> - Filters diffs based on configurable criteria</li>
-                    <li><strong>ClaudeClient</strong> - Manages communication with Anthropic Claude API</li>
-                    <li><strong>PRDiffAnalyzer</strong> - Orchestrates the complete workflow</li>
-                </ul>
-            </section>
-
-            <section>
-                <h2>Testing</h2>
-                <div class="code-block">
-                    <code>
-# Run all tests<br>
-pytest<br>
-<br>
-# Run with coverage<br>
-pytest --cov=src --cov-report=html<br>
-<br>
-# Run specific test file<br>
-pytest tests/test_github_diff_fetcher.py
-                    </code>
-                </div>
-            </section>
-
-            <section>
-                <h2>GitHub Actions Workflow</h2>
+                <h2>The Not-Quite-White Shirt</h2>
                 <p>
-                    The utility can be triggered via a manual GitHub Actions workflow, allowing you to analyze PRs
-                    directly from the GitHub UI. The workflow is configured to accept the PR number as input.
+                    In his book The Suit, conservative essayist Michael Anton suggested adding colored shirts to the
+                    standard white and light blue wardrobe staples. His top pick was pink, followed by yellow,
+                    lavender, and the rare sage green. Much like his recommendations
+                    for balmoral boots and BlazerSuits, which I tried and ultimately found to be costly, misguided
+                    experiments, the pastel-colored shirts I've accumulated over the years have mainly gone unworn.
+                    They've always felt too dandy, working better as stripes, where white lines mute the candy color.
+                </p>
+                <p>
+                    Instead, I've found that ecru fulfills the promise other colors aspire to but rarely deliver. In
+                    a world where most men are free from the cavils of propriety, an ecru shirt can be worn with dark
+                    worsted business suits, but won't look incomplete without neckwear. Contrast this with a stark white
+                    shirt, which can feel as barren as a night sky without stars when worn tieless.
                 </p>
             </section>
-        </main>
 
-        <footer>
-            <p>&copy; 2025 WCAG Review Demo | Built with ❤️ using Python, GitHub API, and Claude AI</p>
-        </footer>
-    </div>
+            <section>
+                <h2>Conclusion</h2>
+                <p>
+                    Building a shirt wardrobe is a journey of self-discovery. What begins as a practical response to
+                    changing body measurements evolves into a deeper appreciation for craftsmanship, history, and
+                    personal style. The oxford cloth button-down remains my foundation, but ecru has become my secret
+                    weapon for versatility.
+                </p>
+                <p>
+                    This guide represents just the first part of the wardrobe equation. In the next installment,
+                    we'll explore shirts for casualwear, chinos, denim, and everything in between. Until then, I
+                    encourage you to examine your current collection with fresh eyes. What serves you well? What
+                    deserves retirement? Your wardrobe should be a source of confidence, not constraint.
+                </p>
+            </section>
+        </article>
+    </main>
 </body>
+
 </html>
