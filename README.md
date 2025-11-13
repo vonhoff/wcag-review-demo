@@ -69,7 +69,7 @@ Trigger manually from Actions tab, select review type and PR number.
 
 ## Review Approach
 
-### Unified Accessibility-Focused Code Review
+### Accessibility-Focused Code Review
 Combines accessibility compliance and code quality analysis with primary focus on accessibility:
 
 **Accessibility Checks:**

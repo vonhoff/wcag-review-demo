@@ -87,14 +87,12 @@ class AnthropicResponseParser:
     def generate_html_report(
         comments: list[ReviewComment],
         pr_number: int,
-        review_type: str,
     ) -> str:
         """Generate HTML report from review comments.
 
         Args:
             comments: List of review comments
             pr_number: Pull request number
-            review_type: Type of review ("accessibility" or "code_review")
 
         Returns:
             HTML report as string
@@ -169,7 +167,6 @@ class AnthropicResponseParser:
         # Fill in template placeholders
         return template.format(
             pr_number=pr_number,
-            review_type=review_type.replace("_", " ").title(),
             generated_time=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),  # noqa: UP017
             wcag_table_rows=wcag_table_html,
             summary_cards=summary_cards_html,

@@ -88,7 +88,7 @@ class TestAnthropicResponseParser:
         ]
 
         html = AnthropicResponseParser.generate_html_report(
-            comments, pr_number=123, review_type="accessibility"
+            comments, pr_number=123
         )
 
         assert "<!DOCTYPE html>" in html
@@ -101,7 +101,7 @@ class TestAnthropicResponseParser:
     def test_generate_html_report_empty_comments(self) -> None:
         """Test HTML report generation with no comments."""
         html = AnthropicResponseParser.generate_html_report(
-            [], pr_number=123, review_type="code_review"
+            [], pr_number=123
         )
 
         assert "<!DOCTYPE html>" in html
@@ -120,7 +120,7 @@ class TestAnthropicResponseParser:
         ]
 
         html = AnthropicResponseParser.generate_html_report(
-            comments, pr_number=1, review_type="code_review"
+            comments, pr_number=1
         )
 
         assert "&lt;script&gt;" in html

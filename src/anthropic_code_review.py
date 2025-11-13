@@ -80,7 +80,7 @@ class AnthropicCodeReview:
 
         if not filtered_diff.strip():
             logger.warning("No relevant changes found after filtering")
-            return [], self.parser.generate_html_report([], pr_number, "unified")
+            return [], self.parser.generate_html_report([], pr_number)
 
         logger.info("Filtered diff size: %d characters", len(filtered_diff))
 
@@ -91,7 +91,7 @@ class AnthropicCodeReview:
 
         logger.info("Found %d issues", len(comments))
 
-        html_report = self.parser.generate_html_report(comments, pr_number, "unified")
+        html_report = self.parser.generate_html_report(comments, pr_number)
 
         return comments, html_report
 

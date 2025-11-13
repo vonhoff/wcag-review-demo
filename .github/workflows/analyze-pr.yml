@@ -7,14 +7,6 @@ on:
         description: 'PR number to analyze'
         required: true
         type: number
-      review_type:
-        description: 'Type of review to perform'
-        required: false
-        type: choice
-        options:
-          - accessibility
-          - code_review
-        default: accessibility
 
 jobs:
   review:
@@ -44,7 +36,6 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_PR_NUMBER: ${{ inputs.pr_number }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          REVIEW_TYPE: ${{ inputs.review_type }}
         run: |
           python -m src.main
 
