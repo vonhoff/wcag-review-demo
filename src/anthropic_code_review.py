@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import logging
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, ClassVar
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     import anthropic
 
 from src.anthropic_client_factory import AnthropicClientFactory, MockAnthropicClient
@@ -114,7 +113,7 @@ class AnthropicCodeReview:
         excluded_files: list[str] = []
 
         for line in lines:
-            if line.startswith(("--- a/", "+++ b/")):
+            if line.startswith("--- a/"):
                 # Process previous file if any
                 if current_filename is not None and not skip_file:
                     filtered_lines.extend(current_file_lines)
@@ -122,11 +121,16 @@ class AnthropicCodeReview:
                 elif current_filename is not None:
                     excluded_files.append(current_filename)
 
-                # Start new file
+                # Start new file - "--- a/" marks the start of a new file section
                 current_filename = line[6:]
                 current_file_lines = [line]
                 skip_file = any(re.search(pattern, current_filename) for pattern in self.EXCLUDE_PATTERNS)
+            elif line.startswith("+++ b/"):
+                # "+++ b/" is part of the same file section, just add it
+                if current_file_lines:
+                    current_file_lines.append(line)
             else:
+                # Regular diff line
                 if current_file_lines:
                     current_file_lines.append(line)
 
@@ -139,11 +143,13 @@ class AnthropicCodeReview:
 
         filtered_diff = "\n".join(filtered_lines)
 
-        # Log file information
-        if included_files:
-            logger.info("Included files: %s", ", ".join(included_files))
-        if excluded_files:
-            logger.info("Excluded files: %s", ", ".join(excluded_files))
+        # Log file information (deduplicate for logging)
+        unique_included = list(dict.fromkeys(included_files))  # Preserves order
+        unique_excluded = list(dict.fromkeys(excluded_files))
+        if unique_included:
+            logger.info("Included files: %s", ", ".join(unique_included))
+        if unique_excluded:
+            logger.info("Excluded files: %s", ", ".join(unique_excluded))
 
         # Check size after filtering
         original_size = len(filtered_diff)
