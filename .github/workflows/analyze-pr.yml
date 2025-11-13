@@ -30,6 +30,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Validate secrets
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set. Please add it in Repository Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          echo "✓ ANTHROPIC_API_KEY secret is configured"
+
       - name: Run Code Review
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
