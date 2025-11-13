@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 from github import Auth, Github
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from github.PullRequest import PullRequest
@@ -24,30 +27,44 @@ class GitHubDiffFetcher:
         self.repository_name = repository_name
 
     def fetch_pr_diff(self, pr_number: int) -> str:
-        """Fetch unified diff for a PR."""
+        """Fetch unified diff for a PR.
+        
+        Returns only the files that are actually changed in the PR.
+        """
         if pr_number <= 0:
             raise ValueError("PR number must be a positive integer")
 
         try:
             repo = self.github_client.get_repo(self.repository_name)
             pull_request = repo.get_pull(pr_number)
-            return self._get_pr_diff(pull_request)
+            
+            # Log PR info for debugging
+            logger.info(
+                "PR #%d: %s -> %s (base: %s, head: %s)",
+                pr_number,
+                pull_request.base.ref,
+                pull_request.head.ref,
+                pull_request.base.sha[:7] if pull_request.base.sha else "unknown",
+                pull_request.head.sha[:7] if pull_request.head.sha else "unknown",
+            )
+            
+            # Get list of changed files for logging
+            files = pull_request.get_files()
+            changed_files = [f.filename for f in files if f.status in ("added", "modified", "removed")]
+            if changed_files:
+                logger.info("Changed files in PR: %s", ", ".join(changed_files))
+            else:
+                logger.warning("No changed files found in PR")
+            
+            # Use the PR's diff property which gives us the unified diff directly
+            # This only includes files that are actually changed in the PR
+            diff = pull_request.diff
+            if not diff:
+                raise Exception(f"PR #{pr_number} has no diff (might be empty or closed)")
+            
+            return diff
         except Exception as e:
             raise Exception(f"Failed to fetch PR #{pr_number} diff: {e!s}") from e
-
-    def _get_pr_diff(self, pull_request: PullRequest) -> str:
-        """Convert PR files to unified diff format."""
-        files = pull_request.get_files()
-        diff_parts = []
-
-        for file in files:
-            if file.patch:
-                diff_parts.append(f"--- a/{file.filename}")
-                diff_parts.append(f"+++ b/{file.filename}")
-                diff_parts.append(file.patch)
-                diff_parts.append("")
-
-        return "\n".join(diff_parts)
 
     def get_pr_info(self, pr_number: int) -> dict[str, str | None]:
         """Get PR metadata."""
